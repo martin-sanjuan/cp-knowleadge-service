@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+    composer:
+      image: composer
+      volumes:
+        - ${PWD}:/app
+        #- ${COMPOSER_HOME:-$HOME/.config/composer}:$COMPOSER_HOME
+        #- ${COMPOSER_CACHE_DIR:-$HOME/.cache/composer}:$COMPOSER_CACHE_DIR
+      entrypoint: composer
+    php-cs-fixer:
+      image: cytopia/php-cs-fixer
+      volumes:
+        - ${PWD}:/app
+    php:
+      image: php:8.1-cli
+      volumes:
+        - ${PWD}:/app

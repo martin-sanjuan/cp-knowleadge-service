@@ -1,0 +1,62 @@
+version: '3.7'
+services:
+  # APP 
+  php:
+    build:
+      context: .docker/php
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    volumes:
+      - ./:/app
+    working_dir: /app
+    networks:
+      - default
+    #extra_hosts:
+    #  - host.docker.internal:host-gateway
+    environment:
+      XDEBUG_MODE: debug
+
+  # NGINX SERVER
+  nginx-user-service:
+    build:
+      context: .docker/nginx
+    hostname: com.user-service
+    ports:
+      - 8010:80
+    environment:
+      PHP_FPM_HOST: php
+    volumes:
+      - ./:/app
+    restart: always
+    depends_on:
+      - php
+    networks:
+      - default
+      - cp-network
+  
+  # APP DATABASE
+  mysql:
+      image: mysql:8.0
+      container_name: ${APP_NAME}-mysql
+      environment:
+        MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+        MYSQL_DATABASE: ${DATABASE_NAME}
+        MYSQL_USER: ${DATABASE_USERNAME}
+        MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+      networks:
+        - default
+      ports:
+        - 33065:3306
+      expose:
+        - 33065
+
+networks:
+  cp-network:
+    external: 
+      name: cp-network
+  default: 
+    name: user-services
+    driver: bridge
+

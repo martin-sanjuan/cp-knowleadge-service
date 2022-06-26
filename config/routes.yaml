@@ -1,0 +1,14 @@
+health_check:
+    path: /health
+    controller: App\Controller\Health\HealthCheck
+    methods: get
+
+server_info:
+    path: /info
+    controller: App\Controller\Health\Info
+    methods: get
+
+users:
+    path: /users
+    controller: App\Controller\Users\Users::create
+    methods: post
