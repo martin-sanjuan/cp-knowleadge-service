@@ -1,7 +1,8 @@
 version: '3.7'
 services:
   # APP 
-  php:
+  kb-php:
+    container_name: kb-service
     build:
       context: .docker/php
     depends_on:
@@ -19,19 +20,19 @@ services:
       XDEBUG_MODE: debug
 
   # NGINX SERVER
-  nginx-user-service:
+  nginx-kb-service:
     build:
       context: .docker/nginx
-    hostname: com.user-service
+    hostname: com.kb-service
     ports:
-      - 8010:80
+      - 8020:80
     environment:
-      PHP_FPM_HOST: php
+      PHP_FPM_HOST: kb-php
     volumes:
       - ./:/app
     restart: always
     depends_on:
-      - php
+      - kb-php
     networks:
       - default
       - cp-network
@@ -48,15 +49,15 @@ services:
       networks:
         - default
       ports:
-        - 33065:3306
+        - 33064:3306
       expose:
-        - 33065
+        - 33064
 
 networks:
   cp-network:
     external: 
       name: cp-network
   default: 
-    name: user-services
+    name: kb-services
     driver: bridge
 

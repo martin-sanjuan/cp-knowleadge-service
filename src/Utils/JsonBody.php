@@ -6,7 +6,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class JsonBody
 {
-    static function decode(string $json): object
+    static function decode(string $json): mixed
     {
         $body = json_decode($json);
 

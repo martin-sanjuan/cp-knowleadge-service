@@ -3,12 +3,12 @@ health_check:
     controller: App\Controller\Health\HealthCheck
     methods: get
 
-server_info:
-    path: /info
-    controller: App\Controller\Health\Info
-    methods: get
+steps:
+    path: /steps
+    controller: App\Controller\Steps\Step::create
+    methods: post
 
-users:
-    path: /users
-    controller: App\Controller\Users\Users::create
+paths:
+    path: /paths
+    controller: App\Controller\Paths\Path::create
     methods: post
