@@ -2,14 +2,9 @@
 
 namespace App\Exception\Data\Accessibility;
 
-use RuntimeException;
+use App\Exception\Base\UnprocessableEntity;
 
-class InvalidAccessibilityCode extends RuntimeException
+class InvalidAccessibilityCode extends UnprocessableEntity
 {
     const MESSAGE = "Invalid accessibility code: %s";
-
-    public function __construct(string $code)
-    {
-        parent::__construct(sprintf(self::MESSAGE, $code));
-    }
 }

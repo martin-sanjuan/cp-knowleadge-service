@@ -4,10 +4,9 @@ namespace App\Repository;
 
 use App\Dto\Request\StepCreate;
 use App\Entity\Uuid;
+use App\Exception\Entity\StepDoesNotExists;
 use App\Services\DatabaseManager;
-use App\Utils\JsonBody;
 use Doctrine\DBAL\Connection;
-use Exception;
 
 class StepRepository
 {
@@ -21,6 +20,30 @@ class StepRepository
     {
         $stepId = $this->createStepEntry($step);
         return $this->getStepById($stepId);
+    }
+
+    public function getAllPublic(): array
+    {
+        $stmt = $this->connection->prepare(
+            'SELECT uuid, name, description, owner FROM steps'
+        );
+
+        $response = $stmt->executeQuery();
+        return $response->fetchAllAssociative();
+    }
+
+    public function getByUUID(string $uuid): array
+    {
+        $stmt = $this->connection->prepare('SELECT id, uuid, name, description, accessibility, owner FROM steps WHERE uuid = :uuid');
+        $response = $stmt->executeQuery([
+            'uuid' => $uuid,
+        ]);
+
+        if ($response->rowCount() == 0) {
+            throw new StepDoesNotExists();
+        }
+
+        return $response->fetchAssociative();
     }
 
     private function createStepEntry(StepCreate $step): int
@@ -42,6 +65,7 @@ class StepRepository
 
     private function getStepById(int $id): Uuid
     {
+
         $stmt = $this->connection->prepare('SELECT uuid FROM steps WHERE id = :id');
         $response = $stmt->executeQuery([
             'id' => $id

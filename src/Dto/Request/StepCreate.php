@@ -6,6 +6,7 @@ use App\Entity\Accessibility;
 use App\Entity\Uuid;
 use App\Repository\AccessibilityRepository;
 use App\Utils\JsonBody;
+use App\Utils\MagicAccessor;
 use InvalidArgumentException;
 use LogicException;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,8 @@ class StepCreate
     private string $description;
     private Uuid $owner;
     private Accessibility $accessibility;
+
+    use MagicAccessor;
 
     public static function fromRequest(Request $request, AccessibilityRepository $accessibilityRepository): self
     {
@@ -28,10 +31,6 @@ class StepCreate
         $step->owner = new Uuid($data->owner);
 
         return $step;
-    }
-
-    public function __get($name) {
-        return $this->$name;
     }
 
     private function getData($request): object

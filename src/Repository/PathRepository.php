@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
+use App\Dto\Request\AddPathNode;
+use App\Entity\PathNode;
 use App\Entity\Uuid;
 use App\Services\DatabaseManager;
-use App\Utils\JsonBody;
 use Doctrine\DBAL\Connection;
-use Exception;
 use App\Dto\Request\PathCreate;
 
 class PathRepository
@@ -21,6 +21,33 @@ class PathRepository
     {
         $pathId = $this->createPathEntry($path);
         return $this->getPathById($pathId);
+    }
+
+    public function findByUUID(string $uuid): bool
+    {
+        $stmt = $this->connection->prepare('SELECT uuid FROM paths WHERE uuid = :uuid');
+        $response = $stmt->executeQuery([
+            'uuid' => $uuid
+        ]);
+
+        return $response->rowCount() == 1;
+    }
+
+    public function setRootNode(Uuid $path, PathNode $node)
+    {
+        if (!empty($node->parent)) {
+            return;
+        }
+
+        $stmt = $this->connection->prepare(
+            'UPDATE paths SET root_node = :node WHERE uuid = :uuid'
+        );
+
+        $stmt->executeStatement([
+            'node' => $node->id,
+            'uuid' => $path
+        ]);
+
     }
 
     private function createPathEntry(PathCreate $path): int

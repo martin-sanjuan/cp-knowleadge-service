@@ -14,6 +14,9 @@ use Exception;
 class AccessibilityRepository
 {
     const TABLE = 'accessibility';
+    const PUBLIC = 'PUBLIC';
+    const PRIVATE = 'PRIVATE';
+
     private Connection $connection;
 
     public function __construct(private DatabaseManager $databaseManager)

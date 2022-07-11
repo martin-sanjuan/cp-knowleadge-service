@@ -3,6 +3,7 @@
 namespace App\Controller\Steps;
 
 use App\Dto\Request\StepCreate;
+use App\Dto\Response\GetAllSteps;
 use App\Repository\AccessibilityRepository;
 use App\Repository\StepRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,5 +20,12 @@ class Step extends AbstractController
         return new JsonResponse([
             'uuid' => $uuid,
         ]);
+    }
+
+    public function getAll(Request $request, StepRepository $stepRepository)
+    {
+        $steps = $stepRepository->getAllPublic();
+
+        return GetAllSteps::fromList($steps);
     }
 }

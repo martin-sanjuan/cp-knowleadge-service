@@ -8,7 +8,17 @@ steps:
     controller: App\Controller\Steps\Step::create
     methods: post
 
+step_get_all:
+    path: /steps
+    controller: App\Controller\Steps\Step::getAll
+    methods: get
+
 paths:
     path: /paths
     controller: App\Controller\Paths\Path::create
+    methods: post
+
+paths_create_node:
+    path: /paths/{path}
+    controller: App\Controller\Paths\Path::addNode
     methods: post
