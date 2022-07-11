@@ -18,6 +18,11 @@ paths:
     controller: App\Controller\Paths\Path::create
     methods: post
 
+get_user_paths:
+    path: /user/{user}/paths
+    controller: App\Controller\Paths\Path::getUserPaths
+    methods: get
+
 paths_create_node:
     path: /paths/{path}
     controller: App\Controller\Paths\Path::addNode

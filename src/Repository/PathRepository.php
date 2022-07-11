@@ -47,7 +47,19 @@ class PathRepository
             'node' => $node->id,
             'uuid' => $path
         ]);
+    }
 
+    public function getAllByOwner(Uuid $owner): array
+    {
+        $stmt = $this->connection->prepare('SELECT 
+                    uuid, owner, root_node, name, description, created_at, updated_at
+            FROM paths WHERE owner = :owner AND deleted_at IS NULL');
+
+        $response = $stmt->executeQuery([
+            'owner' => $owner
+        ]);
+
+        return $response->fetchAllAssociative() ?? [];
     }
 
     private function createPathEntry(PathCreate $path): int
